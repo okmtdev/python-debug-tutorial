@@ -1,7 +1,8 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnType": true,
-  }
+    "editor.defaultFormatter": "charliermarsh.ruff", // 拡張機能を利用
+    "editor.formatOnType": true, // 保存時にフォーマット
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true
 }
