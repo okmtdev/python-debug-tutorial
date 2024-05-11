@@ -1,11 +1,13 @@
 [project]
-name = "rdb"
+name = "pdb"
 version = "0.1.0"
 description = "Add your description here"
 authors = [
     { name = "okmtdev", email = "okmtdev@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "ipdb>=0.13.13",
+]
 readme = "README.md"
 requires-python = ">= 3.11"
 
@@ -16,6 +18,11 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+
+[tool.ruff]
+select = ["ALL"]
+ignore = ["T100", "T201", "D100"]
+fixable = ["ALL"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
