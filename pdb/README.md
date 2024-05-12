@@ -76,7 +76,7 @@ Undocumented commands:
 interact
 ```
 
-## pdb++
+# pdb++
 
 https://github.com/pdbpp/pdbpp
 
@@ -117,3 +117,6 @@ Undocumented commands:
 ======================
 f  frame  hf_list  inspect  paste  put  source
 ```
+
+pdbの場合では，ブレークポイント後c(continue)を押すとそのまま処理が実行されますが，pdb++では変数cの値を返してくれる
+

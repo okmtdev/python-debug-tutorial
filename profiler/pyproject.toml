@@ -5,7 +5,9 @@ description = "Add your description here"
 authors = [
     { name = "okmtdev", email = "okmtdev@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "objgraph>=3.6.1",
+]
 readme = "README.md"
 requires-python = ">= 3.11"
 
@@ -16,6 +18,11 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+
+[tool.ruff]
+select = ["ALL"]
+ignore = ["T100", "T201", "D100"]
+fixable = ["ALL"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
