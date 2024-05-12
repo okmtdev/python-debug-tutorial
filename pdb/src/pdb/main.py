@@ -21,8 +21,8 @@ def fibonacci(n: int) -> int:
         int: result number.
 
     """
-    # breakpoint()
-    ipdb.set_trace()
+    breakpoint()
+    # ipdb.set_trace()
     if n == 1:
         return 0
     if n == 2:  # noqa: PLR2004
