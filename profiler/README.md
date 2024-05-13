@@ -1,6 +1,95 @@
 # profiler
 
-Describe your project here.
+Python Profiler -- プログラムの各部分がどれだけ頻繁に呼ばれたか、そして実行にどれだけ時間がかかったかという統計情報を取得する
+
+https://docs.python.org/ja/3/library/profile.html
+
+```
+import cProfile
+import re
+cProfile.run('re.compile("foo|bar")', 'restats')
+```
+
+211 のプリミティブ実行
+
+```
+         218 function calls (211 primitive calls) in 0.000 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 __init__.py:225(compile)
+        1    0.000    0.000    0.000    0.000 __init__.py:272(_compile)
+        1    0.000    0.000    0.000    0.000 _compiler.py:214(_compile_charset)
+```
+
+```
+import time
+
+
+def main() -> None:  # noqa: D103
+    word = "Hello world!"
+    for s in word:
+        time.sleep(1)
+        print(s)
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
+コマンドラインからも実行できます。
+
+```
+$ rye run python -m cProfile src/profiler/hello.py
+```
+
+- ncalls: 呼び出し回数
+- toltime: 消費された合計時間（sub-function の呼び出しで消費された時間は除外されている）
+- percall: tottime を ncalls で割った値
+- cumtime: この関数と全ての sub function に消費された起動から終了までの累計時間。実行結果はデフォルトでこの値で並び替えられる。
+- percall: cumtime をプリミティブな呼び出し回数で割った値
+- filename:lineno(function): その関数のファイル名、行番号、関数名
+
+```
+$ rye run python -m cProfile -o out/hello.pstats src/profiler/hello.py
+```
+
+`-o` で出力ファイルを指定できる
+
+Python の標準ライブラリに含まれる pstats モジュールや、gprof2dot、pyprof2calltree などのサードパーティツールを使用して保存したプロファイリングデータを解析できる
+
+```
+rye run python src/profiler/analyze.py out/hello.pstats
+['src/profiler/analyze.py', 'out/hello.pstats']
+Mon May 13 16:08:25 2024    out/hello.pstats
+
+         28 function calls in 12.050 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       12   12.049    1.004   12.049    1.004 {built-in method time.sleep}
+       12    0.001    0.000    0.001    0.000 {built-in method builtins.print}
+        1    0.000    0.000   12.050   12.050 src/profiler/hello.py:4(main)
+        1    0.000    0.000   12.050   12.050 src/profiler/hello.py:1(<module>)
+        1    0.000    0.000   12.050   12.050 {built-in method builtins.exec}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+   Ordered by: internal time
+
+Function                                          was called by...
+                                                      ncalls  tottime  cumtime
+{built-in method time.sleep}                      <-      12   12.049   12.049  src/profiler/hello.py:4(main)
+{built-in method builtins.print}                  <-      12    0.001    0.001  src/profiler/hello.py:4(main)
+src/profiler/hello.py:4(main)                     <-       1    0.000   12.050  src/profiler/hello.py:1(<module>)
+src/profiler/hello.py:1(<module>)                 <-       1    0.000   12.050  {built-in method builtins.exec}
+{built-in method builtins.exec}                   <-
+{method 'disable' of '_lsprof.Profiler' objects}  <-
+```
 
 # objgraph
 
