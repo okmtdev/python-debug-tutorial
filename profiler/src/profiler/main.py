@@ -1,11 +1,25 @@
+import cProfile
+import re
+
 import objgraph
 
 
-def main() -> None:
+def objgraph_function() -> None:
     """Execute the main function."""
     computate_something()
-    # objgraph.show_growth(limit=3)
-    objgraph.show_growth()  # doctest: +RANDOM_OUTPUT
+    objgraph.show_growth(limit=3)
+    print("")
+    print("--------------------------------")
+    print("")
+
+
+def profiler_function() -> None:
+    """Execute the main function."""
+    print("profiler_function")
+    # pattern = re.compile("foo|bar")  # noqa: ERA001
+    # print(f"Compiled Regex (foo|bar): {pattern}")  # noqa: ERA001
+    # cProfile.runctx("pattern", globals(), locals()) # noqa: ERA001
+    cProfile.run('re.compile("foo|bar")')
 
 
 class MyBigFatObject:  # noqa: D101
@@ -23,4 +37,5 @@ def computate_something(_cache=None) -> None:  # noqa: ANN001
 
 
 if __name__ == "__main__":
-    main()
+    objgraph_function()
+    profiler_function()
