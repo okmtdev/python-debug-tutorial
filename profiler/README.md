@@ -61,6 +61,36 @@ $ rye run python -m cProfile -o out/hello.pstats src/profiler/hello.py
 
 Python の標準ライブラリに含まれる pstats モジュールや、gprof2dot、pyprof2calltree などのサードパーティツールを使用して保存したプロファイリングデータを解析できる
 
+```
+rye run python src/profiler/analyze.py out/hello.pstats
+['src/profiler/analyze.py', 'out/hello.pstats']
+Mon May 13 16:08:25 2024    out/hello.pstats
+
+         28 function calls in 12.050 seconds
+
+   Ordered by: internal time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       12   12.049    1.004   12.049    1.004 {built-in method time.sleep}
+       12    0.001    0.000    0.001    0.000 {built-in method builtins.print}
+        1    0.000    0.000   12.050   12.050 src/profiler/hello.py:4(main)
+        1    0.000    0.000   12.050   12.050 src/profiler/hello.py:1(<module>)
+        1    0.000    0.000   12.050   12.050 {built-in method builtins.exec}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+   Ordered by: internal time
+
+Function                                          was called by...
+                                                      ncalls  tottime  cumtime
+{built-in method time.sleep}                      <-      12   12.049   12.049  src/profiler/hello.py:4(main)
+{built-in method builtins.print}                  <-      12    0.001    0.001  src/profiler/hello.py:4(main)
+src/profiler/hello.py:4(main)                     <-       1    0.000   12.050  src/profiler/hello.py:1(<module>)
+src/profiler/hello.py:1(<module>)                 <-       1    0.000   12.050  {built-in method builtins.exec}
+{built-in method builtins.exec}                   <-
+{method 'disable' of '_lsprof.Profiler' objects}  <-
+```
+
 # objgraph
 
 objgraph -- module that lets you visually explore Python object graphs.
