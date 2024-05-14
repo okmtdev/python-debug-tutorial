@@ -91,6 +91,23 @@ src/profiler/hello.py:1(<module>)                 <-       1    0.000   12.050  
 {method 'disable' of '_lsprof.Profiler' objects}  <-
 ```
 
+可視化するためにはライブラリを使って
+
+```
+$ rye add graphviz
+$ rye add gprof2dot
+```
+
+以下のようなコマンドで実行可能
+
+```
+rye run gprof2dot -f pstats out/hello.pstats | dot -Tpng -o out/hello.png
+```
+
+[hello-pstats-dot](./out/hello.png)
+
+snakeviz と組み合わせる方法があるらしい
+
 # py-spy
 
 pyspy -- sampling profiler for Python programs. It lets you visualize what your Python program is spending time on without restarting the program or modifying the code in any way. py-spy is extremely low overhead: it is written in Rust for speed and doesn't run in the same process as the profiled Python program. This means py-spy is safe to use against production Python code.
@@ -104,7 +121,7 @@ $ rye add py-spy
 ```
 
 ```
-rye run py-spy
+$ rye run py-spy
 py-spy 0.3.14
 Sampling profiler for Python programs
 
@@ -122,6 +139,88 @@ SUBCOMMANDS:
     help      Print this message or the help of the given subcommand(s)
 ```
 
+record コマンドの使い方
+
+```
+$ py-spy record -o profile.svg --pid 12345
+# OR
+$ py-spy record -o profile.svg -- python myprogram.py
+```
+
+flask のコードを準備する
+
+```
+import json
+
+from flask import Flask, Response
+
+app = Flask(__name__)
+
+
+@app.route("/name/<name>.json")
+def hello_world(name) -> Response:  # noqa: ANN001, D103
+    greet = "Hello %s from flask!" % name
+    result = {"ResultSet": {"Result": {"Greeting": greet}}}
+
+    response = Response(json.dumps(result))
+    response.headers["Content-Type"] = "application/json"
+    response.headers["Last-Modified"] = "Last-Modified: Wed, 21 Jun 2012 07:00:25 GMT"
+    return response
+```
+
+これは立ち上げておく
+
+```
+$ FLASK_APP=src/profiler/web.py rye run flask run
+// ex.) http://127.0.0.1:5000/name/a.json
+
+$ curl http://127.0.0.1:5000/name/a.json
+{"ResultSet": {"Result": {"Greeting": "Hello a from flask!"}}}
+```
+
+```
+sudo FLASK_APP=src/profiler/web.py rye run py-spy record -o out/pyspy-flask.svg -- rye run flask run
+ * Serving Flask app 'src/profiler/web.py'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+py-spy> Sampling process 100 times a second. Press Control-C to exit.
+127.0.0.1 - - [14/May/2024 15:07:28] "GET /name/b.json HTTP/1.1" 200 -
+...
+
+py-spy> Stopped sampling because Control-C pressed
+py-spy> Wrote flamegraph data to 'out/pyspy-flask.svg'. Samples: 1 Errors: 0
+```
+
+実行後、ブラウザで結果が起動する
+
+![pyspy-flask-svg](./out/pyspy-flask.svg)
+
+オプションをつけた実行方法
+
+```
+# 秒間1万個で20秒間サンプリング
+$ sudo FLASK_APP=src/profiler/web.py rye run py-spy record -o out/pyspy-flask-2.svg -d 20 -r 10000 -- rye run flask run
+
+ * Serving Flask app 'src/profiler/web.py'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+py-spy> Sampling process 10000 times a second for 20 seconds. Press Control-C to exit.
+
+py-spy> 1.00s behind in sampling, results may be inaccurate. Try reducing the sampling rate
+py-spy> 1.22s behind in sampling, results may be inaccurate. Try reducing the sampling rate
+
+...
+
+py-spy> 5.21s behind in sampling, results may be inaccurate. Try reducing the sampling rate
+py-spy> Wrote flamegraph data to 'out/pyspy-flask-2.svg'. Samples: 809 Errors: 0
+```
+
+![pyspy-flask-svg](./out/pyspy-flask-2.svg)
+
 # objgraph
 
 objgraph -- module that lets you visually explore Python object graphs.
@@ -130,7 +229,7 @@ https://github.com/mgedmin/objgraph
 
 You’ll need graphviz if you want to draw the pretty graphs.
 
-`graphviz`で綺麗にグラフをかけ、`xdot`でインタラクティブに仕様が可能なそう
+`graphviz`で綺麗にグラフをかけ、`xdot`でインタラクティブに仕様が確認可能になるそう
 
 [Python Object Graphs manual](https://objgraph.readthedocs.io/en/stable/)
 
