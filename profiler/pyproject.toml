@@ -9,6 +9,8 @@ dependencies = [
     "objgraph>=3.6.1",
     "py-spy>=0.3.14",
     "Flask>=3.0.3",
+    "graphviz>=0.20.3",
+    "gprof2dot>=2022.7.29",
 ]
 readme = "README.md"
 requires-python = ">= 3.11"
