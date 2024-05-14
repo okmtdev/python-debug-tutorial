@@ -91,6 +91,37 @@ src/profiler/hello.py:1(<module>)                 <-       1    0.000   12.050  
 {method 'disable' of '_lsprof.Profiler' objects}  <-
 ```
 
+# py-spy
+
+pyspy -- sampling profiler for Python programs. It lets you visualize what your Python program is spending time on without restarting the program or modifying the code in any way. py-spy is extremely low overhead: it is written in Rust for speed and doesn't run in the same process as the profiled Python program. This means py-spy is safe to use against production Python code.
+
+https://github.com/benfred/py-spy
+
+Rust 製の Python プロファイリングツール
+
+```
+$ rye add py-spy
+```
+
+```
+rye run py-spy
+py-spy 0.3.14
+Sampling profiler for Python programs
+
+USAGE:
+    py-spy <SUBCOMMAND>
+
+OPTIONS:
+    -h, --help       Print help information
+    -V, --version    Print version information
+
+SUBCOMMANDS:
+    record    Records stack trace information to a flamegraph, speedscope or raw file
+    top       Displays a top like view of functions consuming CPU
+    dump      Dumps stack traces for a target program to stdout
+    help      Print this message or the help of the given subcommand(s)
+```
+
 # objgraph
 
 objgraph -- module that lets you visually explore Python object graphs.
