@@ -1,6 +1,6 @@
 # line_profiler
 
-line_profiler is a module for doing line-by-line profiling of functions. kernprof is a convenient script for running either line_profiler or the Python standard library’s cProfile or profile modules, depending on what is available.
+line_profiler -- a module for doing line-by-line profiling of functions. kernprof is a convenient script for running either line_profiler or the Python standard library’s cProfile or profile modules, depending on what is available.
 
 https://github.com/pyutils/line_profiler
 
@@ -155,3 +155,55 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 ```
 
 - Note: the -r flag will use “rich-output” if you have the rich module installed.
+
+# memory_profiler
+
+memory_profiler -- This is a python module for monitoring memory consumption of a process as well as line-by-line analysis of memory consumption for python programs. It is a pure python module which depends on the psutil module.
+
+Note: This package is no longer actively maintained. I won’t be actively responding to issues. If you’d like to volunteer to maintain it, please drop me a line at f@bianp.net
+
+# psutil
+
+psutil -- psutil (process and system utilities) is a cross-platform library for retrieving information on running processes and system utilization (CPU, memory, disks, network, sensors) in Python. It is useful mainly for system monitoring, profiling and limiting process resources and management of running processes. It implements many functionalities offered by classic UNIX command line tools such as ps, top, iotop, lsof, netstat, ifconfig, free and others.
+
+cpu
+
+```
+# CPU 利用率
+psutil.cpu_percent(interval=1)
+
+# ~
+psutil.cpu_count()
+
+# ~
+psutil.cpu_stats()
+
+# ~
+psutil.cpu_freq()
+
+# ~
+psutil.getloadavg()
+```
+
+memory
+
+```
+# ~
+psutil.virtual_memory()
+
+# ~
+psutil.swap_memory()
+```
+
+disks
+
+```
+# ~
+psutil.disk_partitions()
+
+# ~
+psutil.disk_usage('/')
+
+# ~
+psutil.disk_io_counters(perdisk=False)
+```
